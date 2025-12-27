@@ -288,7 +288,7 @@ Payloads live in `sample_data/`
 ## Postman
 
 Import:
-- `postman/AcmeEHR.postman_collection.json`
+- [`postman/AcmeEHR.postman_collection.json`](https://github.com/vanessuniq/acme-ehr-api/blob/main/postman/AcmeEHR.postman_collection.json)
 
 set:
 
