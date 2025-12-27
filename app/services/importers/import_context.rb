@@ -96,5 +96,5 @@ module Importers
           }
         end
       end
-    end
+  end
 end
