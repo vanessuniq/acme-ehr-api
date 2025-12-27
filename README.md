@@ -238,6 +238,14 @@ Examples:
 
 This configuration is documented in code and easy to extend.
 
+## Clone the Repository
+
+```
+git clone https://github.com/vanessuniq/acme-ehr-api.git
+cd acme-ehr-api
+```
+
+From there, follow either the Local or Docker quick start below.
 
 ## Quick Start (Docker – Recommended)
 
