@@ -2,13 +2,18 @@
 
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ]; then
-    LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-    export LD_PRELOAD
+  LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+  export LD_PRELOAD
 fi
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+# Run migrations/creates when the container is starting the Rails server.
+# Works whether command is:
+# - bundle exec rails server ...
+# - bin/rails server ...
+# - rails server ...
+args="$*"
+if echo "$args" | grep -Eq '(^| )((bundle exec )?(\./)?bin/rails|(\./)?bin/rails|rails) server( |$)'; then
   ./bin/rails db:prepare
 fi
 
-exec "${@}"
+exec "$@"
