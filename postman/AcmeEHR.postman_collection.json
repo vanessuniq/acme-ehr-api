@@ -1,0 +1,444 @@
+{
+  "info": {
+    "_postman_id": "8397cb8a-9905-4e40-91f5-a760f294e1d2",
+    "name": "Acme EHR Data Processing API (Rails)",
+    "description": "Updated Postman collection for Acme EHR take-home (Rails). Includes import, records, transform, analytics, and clinical timeline endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "apiPrefix",
+      "value": "/api/v1"
+    },
+    {
+      "key": "sampleJsonl",
+      "value": "{\"resourceType\":\"Observation\",\"id\":\"obs-001\",\"status\":\"final\",\"code\":{\"coding\":[{\"system\":\"http://loinc.org\",\"code\":\"85354-9\",\"display\":\"Blood pressure panel\"}],\"text\":\"Blood Pressure\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"effectiveDateTime\":\"2025-01-10T09:00:00Z\",\"valueQuantity\":{\"value\":120,\"unit\":\"mmHg\"}}\n{\"resourceType\":\"MedicationRequest\",\"id\":\"med-001\",\"status\":\"active\",\"intent\":\"order\",\"medicationCodeableConcept\":{\"coding\":[{\"system\":\"http://www.nlm.nih.gov/research/umls/rxnorm\",\"code\":\"197361\",\"display\":\"Lisinopril 10 MG\"}],\"text\":\"Lisinopril 10mg\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"authoredOn\":\"2025-01-10T10:00:00Z\",\"dosageInstruction\":[{\"text\":\"Take one tablet daily\"}]}\n{\"resourceType\":\"Patient\",\"id\":\"PT-001\",\"name\":[{\"use\":\"official\",\"family\":\"Doe\",\"given\":[\"John\"]}],\"gender\":\"male\",\"active\":true}"
+    },
+    {
+      "key": "subjectRef",
+      "value": "Patient/PT-001"
+    },
+    {
+      "key": "resourceType",
+      "value": "Observation"
+    },
+    {
+      "key": "recordId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Imports",
+      "item": [
+        {
+          "name": "POST Import (raw JSONL in body)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/import",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "import"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{{sampleJsonl}}"
+            }
+          },
+          "response": [],
+          "description": "Uploads JSONL in request body using {{sampleJsonl}}."
+        },
+        {
+          "name": "POST Import (multipart file upload)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/import",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "import"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": "Body -> form-data -> key=file (type=file) and choose a .jsonl file."
+        }
+      ]
+    },
+    {
+      "name": "Records",
+      "item": [
+        {
+          "name": "GET Records (all)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records"
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Records (by resourceType)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records?resourceType={{resourceType}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records"
+              ],
+              "query": [
+                {
+                  "key": "resourceType",
+                  "value": "{{resourceType}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Records (by subject)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records?subject={{subjectRef}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records"
+              ],
+              "query": [
+                {
+                  "key": "subject",
+                  "value": "{{subjectRef}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Records (fields projection)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records?fields=id,resourceType,code",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records"
+              ],
+              "query": [
+                {
+                  "key": "fields",
+                  "value": "id,resourceType,code"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Record by id (Record id)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records/{{recordId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records",
+                "{{recordId}}"
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Record by id (fields projection)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/records/{{recordId}}?fields=id,resourceType,status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records",
+                "{{recordId}}"
+              ],
+              "query": [
+                {
+                  "key": "fields",
+                  "value": "id,resourceType,status"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Transforms",
+      "item": [
+        {
+          "name": "POST Transform (no store)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/transform",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "transform"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceTypes\": [\n    \"Observation\"\n  ],\n  \"transformations\": [\n    {\n      \"action\": \"flatten\",\n      \"field\": \"code.coding[0]\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.value\",\n      \"as\": \"value\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.unit\",\n      \"as\": \"unit\"\n    }\n  ],\n  \"filters\": {\n    \"subject\": \"Patient/PT-001\"\n  }\n}"
+            }
+          },
+          "response": [],
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "GET Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/analytics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "analytics"
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Timelines",
+      "item": [
+        {
+          "name": "GET Patient Timeline (required subject)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/timelines?subject={{subjectRef}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "timelines"
+              ],
+              "query": [
+                {
+                  "key": "subject",
+                  "value": "{{subjectRef}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        },
+        {
+          "name": "GET Patient Timeline (filters)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/timelines?subject={{subjectRef}}&resourceTypes=Observation,MedicationRequest,Procedure,Condition&from=2025-01-01&to=2025-12-31&limit=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "timelines"
+              ],
+              "query": [
+                {
+                  "key": "subject",
+                  "value": "{{subjectRef}}"
+                },
+                {
+                  "key": "resourceTypes",
+                  "value": "Observation,MedicationRequest,Procedure,Condition"
+                },
+                {
+                  "key": "from",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2025-12-31"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /up",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/up",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "up"
+              ]
+            }
+          },
+          "response": [],
+          "description": ""
+        }
+      ]
+    }
+  ]
+}

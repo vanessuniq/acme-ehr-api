@@ -1,0 +1,24 @@
+{
+  "resourceTypes": [
+    "Observation"
+  ],
+  "filters": {
+    "subject": "Patient/PT-001"
+  },
+  "transformations": [
+    {
+      "action": "flatten",
+      "field": "code.coding[0]"
+    },
+    {
+      "action": "extract",
+      "field": "valueQuantity.value",
+      "as": "value"
+    },
+    {
+      "action": "extract",
+      "field": "valueQuantity.unit",
+      "as": "unit"
+    }
+  ]
+}
