@@ -1,36 +1,11 @@
 {
   "info": {
-    "_postman_id": "8397cb8a-9905-4e40-91f5-a760f294e1d2",
+    "_postman_id": "66e16e78-e49b-4f0a-b8dd-180ee7a397f2",
     "name": "Acme EHR Data Processing API (Rails)",
-    "description": "Updated Postman collection for Acme EHR take-home (Rails). Includes import, records, transform, analytics, and clinical timeline endpoints.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "description": "Postman collection for Acme EHR take-home (Rails). Includes import, records, transform, analytics, and clinical timeline endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26680246"
   },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "apiPrefix",
-      "value": "/api/v1"
-    },
-    {
-      "key": "sampleJsonl",
-      "value": "{\"resourceType\":\"Observation\",\"id\":\"obs-001\",\"status\":\"final\",\"code\":{\"coding\":[{\"system\":\"http://loinc.org\",\"code\":\"85354-9\",\"display\":\"Blood pressure panel\"}],\"text\":\"Blood Pressure\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"effectiveDateTime\":\"2025-01-10T09:00:00Z\",\"valueQuantity\":{\"value\":120,\"unit\":\"mmHg\"}}\n{\"resourceType\":\"MedicationRequest\",\"id\":\"med-001\",\"status\":\"active\",\"intent\":\"order\",\"medicationCodeableConcept\":{\"coding\":[{\"system\":\"http://www.nlm.nih.gov/research/umls/rxnorm\",\"code\":\"197361\",\"display\":\"Lisinopril 10 MG\"}],\"text\":\"Lisinopril 10mg\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"authoredOn\":\"2025-01-10T10:00:00Z\",\"dosageInstruction\":[{\"text\":\"Take one tablet daily\"}]}\n{\"resourceType\":\"Patient\",\"id\":\"PT-001\",\"name\":[{\"use\":\"official\",\"family\":\"Doe\",\"given\":[\"John\"]}],\"gender\":\"male\",\"active\":true}"
-    },
-    {
-      "key": "subjectRef",
-      "value": "Patient/PT-001"
-    },
-    {
-      "key": "resourceType",
-      "value": "Observation"
-    },
-    {
-      "key": "recordId",
-      "value": "1"
-    }
-  ],
   "item": [
     {
       "name": "Imports",
@@ -45,8 +20,12 @@
                 "value": "text/plain"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{sampleJsonl}}"
+            },
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/import",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/import",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -54,22 +33,27 @@
                 "{{apiPrefix}}",
                 "import"
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{{sampleJsonl}}"
             }
           },
-          "response": [],
-          "description": "Uploads JSONL in request body using {{sampleJsonl}}."
+          "response": []
         },
         {
           "name": "POST Import (multipart file upload)",
           "request": {
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/D:/Dropbox/My PC (LAPTOP-O55V3KA3)/Downloads/sample.jsonl"
+                }
+              ]
+            },
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/import",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/import",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -77,20 +61,9 @@
                 "{{apiPrefix}}",
                 "import"
               ]
-            },
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": ""
-                }
-              ]
             }
           },
-          "response": [],
-          "description": "Body -> form-data -> key=file (type=file) and choose a .jsonl file."
+          "response": []
         }
       ]
     },
@@ -108,7 +81,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -118,8 +91,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         },
         {
           "name": "GET Records (by resourceType)",
@@ -132,7 +104,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records?resourceType={{resourceType}}",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records?resourceType={{resourceType}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -148,8 +120,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         },
         {
           "name": "GET Records (by subject)",
@@ -162,7 +133,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records?subject={{subjectRef}}",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records?subject={{subjectRef}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -178,8 +149,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         },
         {
           "name": "GET Records (fields projection)",
@@ -192,7 +162,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records?fields=id,resourceType,code",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records?fields=id,resourceType,code",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -208,8 +178,40 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
+        },
+        {
+          "name": "GET Records (by resourceType + subject + fields projection)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records/{{recordId}}?suject={{subjectRef}}&resourceType={{resourceType}}&fields=id,resourceType,status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "{{apiPrefix}}",
+                "records",
+                "{{recordId}}"
+              ],
+              "query": [
+                {
+                  "key": "suject",
+                  "value": "{{subjectRef}}"
+                },
+                {
+                  "key": "resourceType",
+                  "value": "{{resourceType}}"
+                },
+                {
+                  "key": "fields",
+                  "value": "id,resourceType,status"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "GET Record by id (Record id)",
@@ -222,7 +224,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records/{{recordId}}",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records/{{recordId}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -233,8 +235,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         },
         {
           "name": "GET Record by id (fields projection)",
@@ -247,7 +248,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/records/{{recordId}}?fields=id,resourceType,status",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/records/{{recordId}}?fields=id,resourceType,status",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -264,8 +265,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         }
       ]
     },
@@ -282,8 +282,12 @@
                 "value": "application/json"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceTypes\": [\n    \"Observation\"\n  ],\n  \"transformations\": [\n    {\n      \"action\": \"flatten\",\n      \"field\": \"code.coding[0]\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.value\",\n      \"as\": \"value\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.unit\",\n      \"as\": \"unit\"\n    }\n  ],\n  \"filters\": {\n    \"subject\": \"Patient/PT-001\"\n  }\n}"
+            },
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/transform",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/transform",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -291,14 +295,9 @@
                 "{{apiPrefix}}",
                 "transform"
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"resourceTypes\": [\n    \"Observation\"\n  ],\n  \"transformations\": [\n    {\n      \"action\": \"flatten\",\n      \"field\": \"code.coding[0]\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.value\",\n      \"as\": \"value\"\n    },\n    {\n      \"action\": \"extract\",\n      \"field\": \"valueQuantity.unit\",\n      \"as\": \"unit\"\n    }\n  ],\n  \"filters\": {\n    \"subject\": \"Patient/PT-001\"\n  }\n}"
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         }
       ]
     },
@@ -316,7 +315,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/analytics",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/analytics",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -326,8 +325,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         }
       ]
     },
@@ -345,7 +343,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/timelines?subject={{subjectRef}}",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/timelines?subject={{subjectRef}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -361,8 +359,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         },
         {
           "name": "GET Patient Timeline (filters)",
@@ -375,7 +372,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}{{apiPrefix}}/timelines?subject={{subjectRef}}&resourceTypes=Observation,MedicationRequest,Procedure,Condition&from=2025-01-01&to=2025-12-31&limit=50",
+              "raw": "{{baseUrl}}/{{apiPrefix}}/timelines?subject={{subjectRef}}&resourceTypes=Observation,MedicationRequest,Procedure,Condition&from=2025-01-01&to=2025-12-31&limit=50",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -407,8 +404,7 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         }
       ]
     },
@@ -435,10 +431,35 @@
               ]
             }
           },
-          "response": [],
-          "description": ""
+          "response": []
         }
       ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "apiPrefix",
+      "value": "/api/v1"
+    },
+    {
+      "key": "sampleJsonl",
+      "value": "{\"resourceType\":\"Observation\",\"id\":\"obs-001\",\"status\":\"final\",\"code\":{\"coding\":[{\"system\":\"http://loinc.org\",\"code\":\"85354-9\",\"display\":\"Blood pressure panel\"}],\"text\":\"Blood Pressure\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"effectiveDateTime\":\"2025-01-10T09:00:00Z\",\"valueQuantity\":{\"value\":120,\"unit\":\"mmHg\"}}\n{\"resourceType\":\"MedicationRequest\",\"id\":\"med-001\",\"status\":\"active\",\"intent\":\"order\",\"medicationCodeableConcept\":{\"coding\":[{\"system\":\"http://www.nlm.nih.gov/research/umls/rxnorm\",\"code\":\"197361\",\"display\":\"Lisinopril 10 MG\"}],\"text\":\"Lisinopril 10mg\"},\"subject\":{\"reference\":\"Patient/PT-001\",\"display\":\"John Doe\"},\"authoredOn\":\"2025-01-10T10:00:00Z\",\"dosageInstruction\":[{\"text\":\"Take one tablet daily\"}]}\n{\"resourceType\":\"Patient\",\"id\":\"PT-001\",\"name\":[{\"use\":\"official\",\"family\":\"Doe\",\"given\":[\"John\"]}],\"gender\":\"male\",\"active\":true}"
+    },
+    {
+      "key": "subjectRef",
+      "value": "Patient/PT-001"
+    },
+    {
+      "key": "resourceType",
+      "value": "Observation"
+    },
+    {
+      "key": "recordId",
+      "value": "1"
     }
   ]
 }
