@@ -111,8 +111,51 @@ module Importers
         subject_reference: extract_subject_reference(resource),
         extracted_data: extracted_data,
         raw_data: resource,
-        import_run_id: import_run.id
+        import_run_id: import_run.id,
+        next_of_kin: resource_type == "Patient" ? extract_next_of_kin_contact(resource) : {}
       }
+    end
+
+    # Extracts the next-of-kin contact information from a FHIR Patient resource.
+    #
+    # Searches through the patient's contact array to find a contact with a
+    # relationship coding that indicates next-of-kin status. This is identified by:
+    # - A coding with code "N" (FHIR relationship code for next-of-kin), or
+    # - A coding with display text matching "next-of-kin" (case-insensitive)
+    #
+    # @param patient_resource [Hash] The FHIR Patient resource containing contact information
+    # @return [Hash, nil] The first contact object that matches next-of-kin criteria,
+    #   or nil if no contacts array exists or no next-of-kin is found
+    #
+    # @example Patient resource structure
+    #   {
+    #     "resourceType": "Patient",
+    #     "contact": [
+    #       {
+    #         "relationship": [
+    #           {
+    #             "coding": [
+    #               { "code": "N", "display": "Next-of-Kin" }
+    #             ]
+    #           }
+    #         ],
+    #         "name": { "family": "Smith", "given": ["Jane"] }
+    #       }
+    #     ]
+    #   }
+    def extract_next_of_kin_contact(patient_resource)
+      contacts = patient_resource["contact"]
+      return nil unless contacts.is_a?(Array)
+
+      contacts.find do |contact|
+        relationships = contact.dig("relationship")
+        next false unless relationships.is_a?(Array)
+
+        relationships.any? do |rel|
+          codings = rel.dig("coding")
+          codings.is_a?(Array) && codings.any? { |c| c["code"] == "N" || c["display"]&.casecmp("next-of-kin")&.zero? }
+        end
+      end
     end
 
     def extract_subject_reference(resource)
@@ -130,7 +173,8 @@ module Importers
         r.subject_reference = record_attrs[:subject_reference]
         r.extracted_data = record_attrs[:extracted_data]
         r.raw_data = record_attrs[:raw_data]
-        r.import_run_id = record_attrs[:import_run_id]
+        r.import_run_id = record_attrs[:import_run_id],
+        r.next_of_kin = record_attrs[:next_of_kin]
       end
 
       true
