@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_26_024315) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_12_192206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_26_024315) do
     t.jsonb "raw_data", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "next_of_kin", default: {}
     t.index ["extracted_data"], name: "index_records_on_extracted_data", using: :gin
     t.index ["import_run_id"], name: "index_records_on_import_run_id"
     t.index ["resource_id", "resource_type"], name: "index_record_on_resource_id_and_type", unique: true
